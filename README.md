@@ -1,3 +1,10 @@
 # DesktopFileCreator
-A very easy .desktop file creator for Linux. [Download here](https://github.com/viktorstrate/DesktopFileCreator/releases/latest)
+A very easy .desktop file creator for Linux.
 ![Screenshot](https://cloud.githubusercontent.com/assets/4233458/6565924/663dd94e-c6b4-11e4-92d1-9a85fe04c799.png)
+
+## Download
+1. Download the latest version here [Download](https://github.com/viktorstrate/DesktopFileCreator/releases/latest).
+2. Place the file everywhere you want.
+3. Rightclick on the file and select "Properties" -> "Permissions"
+4. Make sure the "Execute" checkbox is checked.
+5. Doubleclick the file to open.
