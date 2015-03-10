@@ -15,56 +15,58 @@ import java.io.IOException;
  */
 public class MainWindow extends JFrame {
 
-    private JTextField txtName;
-    private JTextField txtDesc;
-    private JTextField txtIcon;
-    private JButton btnIcon;
-    private JTextField txtExe;
-    private JButton btnExe;
-    private JList listCategories;
-    private JTextField txtKeywords;
-    private JTabbedPane tabbedPane;
-    private JTextField txtOutput;
-    private JButton btnOutput;
-    private JButton btnGenerate;
-    private JTextField txtVersion;
-    private JPanel mainPanel;
-    private JPanel basicPanel;
-    private JLabel labelName;
-    private JLabel labelDesc;
-    private JLabel labelIcon;
-    private JLabel labelExe;
-    private JLabel labelCategories;
-    private JLabel labelKeywords;
-    private JPanel panelAdvanced;
-    private JLabel labelType;
-    private JLabel labelVersion;
-    private JLabel labelOutput;
-    private JComboBox comboType;
-    private JLabel labelURL;
-    private JTextField txtURL;
-    private JTextField txtGenericName;
-    private JComboBox comboNoDisplay;
-    private JComboBox comboHidden;
-    private JComboBox comboDBus;
-    private JTextField txtTryExe;
-    private JButton btnTryExe;
-    private JTextField txtPath;
-    private JLabel labelTerminal;
-    private JComboBox comboTerminal;
-    private JTextField txtWM;
-    private JLabel imgIcon;
-    private JLabel labelGenericName;
-    private JLabel labelNoDisplay;
-    private JLabel labelHidden;
-    private JLabel labelDBus;
-    private JLabel labelTryExe;
-    private JLabel labelPath;
-    private JButton btnPath;
-    private JLabel labelStartupNotify;
-    private JComboBox comboStartupNotify;
-    private JLabel labelWM;
+    protected JTextField txtName;
+    protected JTextField txtDesc;
+    protected JTextField txtIcon;
+    protected JButton btnIcon;
+    protected JTextField txtExe;
+    protected JButton btnExe;
+    protected JList listCategories;
+    protected JTextField txtKeywords;
+    protected JTabbedPane tabbedPane;
+    protected JTextField txtOutput;
+    protected JButton btnOutput;
+    protected JButton btnGenerate;
+    protected JTextField txtVersion;
+    protected JPanel mainPanel;
+    protected JPanel basicPanel;
+    protected JLabel labelName;
+    protected JLabel labelDesc;
+    protected JLabel labelIcon;
+    protected JLabel labelExe;
+    protected JLabel labelCategories;
+    protected JLabel labelKeywords;
+    protected JPanel panelAdvanced;
+    protected JLabel labelType;
+    protected JLabel labelVersion;
+    protected JLabel labelOutput;
+    protected JComboBox comboType;
+    protected JLabel labelURL;
+    protected JTextField txtURL;
+    protected JTextField txtGenericName;
+    protected JComboBox comboNoDisplay;
+    protected JComboBox comboHidden;
+    protected JComboBox comboDBus;
+    protected JTextField txtTryExe;
+    protected JButton btnTryExe;
+    protected JTextField txtPath;
+    protected JLabel labelTerminal;
+    protected JComboBox comboTerminal;
+    protected JTextField txtWM;
+    protected JLabel imgIcon;
+    protected JLabel labelGenericName;
+    protected JLabel labelNoDisplay;
+    protected JLabel labelHidden;
+    protected JLabel labelDBus;
+    protected JLabel labelTryExe;
+    protected JLabel labelPath;
+    protected JButton btnPath;
+    protected JLabel labelStartupNotify;
+    protected JComboBox comboStartupNotify;
+    protected JLabel labelWM;
+
     private BufferedImage image;
+    private Compiler compiler;
 
     public MainWindow() throws HeadlessException {
         super("Desktop File Creator");
@@ -79,6 +81,7 @@ public class MainWindow extends JFrame {
 
     public void init(){
         setContentPane(mainPanel);
+        compiler = new Compiler(this);
     }
 
     public void setupListeners(){
@@ -98,6 +101,12 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 showOutputSelectPopup();
+            }
+        });
+        btnGenerate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                compiler.compile();
             }
         });
     }
