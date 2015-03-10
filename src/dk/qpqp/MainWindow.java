@@ -12,6 +12,7 @@ import java.io.IOException;
 
 /**
  * Created by viktorstrate on 3/9/15.
+ * This is the Main windows file, from here the window gets created and all functions is created here.
  */
 public class MainWindow extends JFrame {
 
@@ -68,6 +69,8 @@ public class MainWindow extends JFrame {
     private BufferedImage image;
     private Compiler compiler;
 
+    private Popup popupIconBrowse, popupExecPath, popupTryExec, popupPathBrowse, popupOutput;
+
     public MainWindow() throws HeadlessException {
         super("Desktop File Creator");
         init();
@@ -82,8 +85,26 @@ public class MainWindow extends JFrame {
     public void init(){
         setContentPane(mainPanel);
         compiler = new Compiler(this);
+
+        // Initializes the popups
+        popupExecPath = new Popup("Add file / path to execution command");
+
+        popupIconBrowse = new Popup("Open icon");
+        String[] iconExtensions = {"png", "svg", "svgz"};
+        popupIconBrowse.addFilter("Allowed file formats", iconExtensions);
+
+        popupOutput = new Popup("Where to save the desktop file", System.getProperty("user.home")+"/.local/share/applications");
+        String[] outputExtensions = {"desktop"};
+        popupOutput.addFilter(".desktop extension", outputExtensions);
+
+        popupPathBrowse = new Popup("Open default path for application");
+        popupTryExec = new Popup("Open try execute");
+
     }
 
+    /**
+     * Sets up all the input listeners for the MainWindow like button inputs
+     */
     public void setupListeners(){
         btnIcon.addActionListener(new ActionListener() {
             @Override
@@ -109,76 +130,79 @@ public class MainWindow extends JFrame {
                 compiler.compile();
             }
         });
+        btnTryExe.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                showTryExecPopup();
+            }
+        });
     }
 
     public void showIconSelectPopup(){
-
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Select icon");
-        fileChooser.addChoosableFileFilter(new FileFilter() {
+        popupIconBrowse.showOpenDialog(new PopupListener() {
             @Override
-            public boolean accept(File file) {
-
-                if(file.getName().toLowerCase().endsWith(".png") ||
-                        file.getName().toLowerCase().endsWith(".svg") ||
-                        file.getName().toLowerCase().endsWith(".svgz") ||
-                        file.isDirectory()){
-                    return true;
-                } else return false;
+            public void popupSuccessful(File file) {
+                txtIcon.setText(file.toString());
+                try {
+                    image = ImageIO.read(file);
+                    Image scaledImage = image.getScaledInstance(64, 64, Image.SCALE_DEFAULT);
+                    imgIcon.setIcon(new ImageIcon(scaledImage));
+                    revalidate();
+                    repaint();
+                    getContentPane().repaint();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public String getDescription() {
-                return "Compatible file extensions";
+            public void popupCanceled() {
             }
-        });
-        if (fileChooser.showOpenDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            txtIcon.setText(file.toString());
-            try {
-                image = ImageIO.read(file);
-                Image scaledImage = image.getScaledInstance(64, 64, Image.SCALE_DEFAULT);
-                imgIcon.setIcon(new ImageIcon(scaledImage));
-                revalidate();
-                repaint();
-                getContentPane().repaint();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        }, MainWindow.this);
     }
 
     public void showExecSelectPopup(){
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Select Executable file");
-        if (fileChooser.showOpenDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            txtExe.setText(txtExe.getText()+file.toString());
-        }
+        popupExecPath.showOpenDialog(new PopupListener() {
+            @Override
+            public void popupSuccessful(File file) {
+                txtExe.setText(txtExe.getText() + file.toString());
+            }
+
+            @Override
+            public void popupCanceled() {
+
+            }
+        }, MainWindow.this);
     }
 
     public void showOutputSelectPopup(){
-        JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home")+"/.local/share/applications");
-        fileChooser.setDialogTitle("Where to save the desktop file");
-        fileChooser.addChoosableFileFilter(new FileFilter() {
+        popupOutput.showSaveDialog(new PopupListener() {
             @Override
-            public boolean accept(File file) {
-
-                return file.getName().toLowerCase().endsWith(".desktop") ||
-                        file.isDirectory();
+            public void popupSuccessful(File file) {
+                if(!file.toString().toLowerCase().endsWith(".desktop")){
+                    txtOutput.setText(file.toString()+".desktop");
+                } else txtOutput.setText(file.toString().substring(0, file.toString().length()-8)+".desktop");
             }
 
             @Override
-            public String getDescription() {
-                return ".desktop file";
+            public void popupCanceled() {
+
             }
-        });
-        if (fileChooser.showSaveDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            if(!file.toString().toLowerCase().endsWith(".desktop")){
-                txtOutput.setText(file.toString()+".desktop");
-            } else txtOutput.setText(file.toString().substring(0, file.toString().length()-8)+".desktop");
-        }
+        }, MainWindow.this);
+    }
+
+    public void showTryExecPopup(){
+        popupTryExec.showOpenDialog(new PopupListener() {
+            @Override
+            public void popupSuccessful(File file) {
+                txtTryExe.setText(file.getAbsoluteFile().toString());
+            }
+
+            @Override
+            public void popupCanceled() {
+
+            }
+        }, MainWindow.this);
     }
 
     private void createUIComponents() {

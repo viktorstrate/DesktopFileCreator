@@ -4,6 +4,7 @@ import javax.swing.*;
 
 /**
  * Created by viktorstrate on 3/9/15.
+ * This is the class to startup the program
  */
 public class Main {
     public static void main(String[] args) {
