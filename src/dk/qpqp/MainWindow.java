@@ -97,7 +97,7 @@ public class MainWindow extends JFrame {
         String[] outputExtensions = {"desktop"};
         popupOutput.addFilter(".desktop extension", outputExtensions);
 
-        popupPathBrowse = new Popup("Open default path for application");
+        popupPathBrowse = new Popup("Open default path for application", null, true);
         popupTryExec = new Popup("Open try execute");
 
     }
@@ -136,6 +136,26 @@ public class MainWindow extends JFrame {
                 showTryExecPopup();
             }
         });
+        btnPath.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                showPathSelectPopup();
+            }
+        });
+    }
+
+    private void showPathSelectPopup() {
+        popupPathBrowse.showOpenDialog(new PopupListener() {
+            @Override
+            public void popupSuccessful(File file) {
+                txtPath.setText(file.getAbsolutePath().toString());
+            }
+
+            @Override
+            public void popupCanceled() {
+
+            }
+        }, MainWindow.this);
     }
 
     public void showIconSelectPopup(){

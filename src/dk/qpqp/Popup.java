@@ -1,5 +1,7 @@
 package dk.qpqp;
 
+import com.sun.istack.internal.Nullable;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
@@ -24,9 +26,21 @@ public class Popup extends JFileChooser {
      * @param title The title of the popup
      * @param defaultPath The default file path of the popup window
      */
-    public Popup(String title, String defaultPath){
+    public Popup(String title, @Nullable String defaultPath){
         super(defaultPath);
-        this.setDialogTitle(title);
+        if(defaultPath!=null)
+            this.setDialogTitle(title);
+    }
+
+    /**
+     * Initializes the popup
+     * @param title The title of the popup
+     * @param defaultPath The default file path of the popup window
+     * @param onlyDirectories Sets if the selection mode should be only directories, or files.
+     */
+    public Popup(String title, @Nullable String defaultPath, boolean onlyDirectories){
+        this(title, defaultPath);
+        this.setFileSelectionMode(DIRECTORIES_ONLY);
     }
 
     /**
